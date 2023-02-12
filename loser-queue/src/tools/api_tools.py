@@ -208,8 +208,11 @@ def get_last_matches_of_summoner_by_puuid(summoner_puuid: str, number_of_matches
 
 @exception(logger)
 def get_last_matches_of_summoner_by_summoner_name(summoner_name: str, number_of_matches: int, max_match_id = None):
-    summoner = get_summoner_from_summoner_name(summoner_name=summoner_name)
-    summoner_puuid = extract_puuid_from_summoner(summoner=summoner)
+    try:
+        summoner = get_summoner_from_summoner_name(summoner_name=summoner_name)
+        summoner_puuid = extract_puuid_from_summoner(summoner=summoner)
+    except CustomHttpError as e:
+        return []
 
     return get_last_matches_of_summoner_by_puuid(summoner_puuid=summoner_puuid, number_of_matches=number_of_matches, max_match_id=max_match_id)
 
