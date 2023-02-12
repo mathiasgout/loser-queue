@@ -1,4 +1,5 @@
 from src import logger
+from src import config
 from src.tools.error_tools import exception
 from src.tools import api_tools, basic_tools
 
@@ -13,9 +14,11 @@ DATA_FOLDER = os.path.join(
 
 
 @exception(logger)
-def create_json_file(tiers: list, number_of_matches_by_tier: int):
+def create_json_file():
 
-    for tier in tiers:
+    settings = config.get_settings()
+
+    for tier in settings.TIERS:
         if tier not in [
             "CHALLENGER",
             "GRANDMASTER",
@@ -32,9 +35,9 @@ def create_json_file(tiers: list, number_of_matches_by_tier: int):
     # Create "data" folder
     pathlib.Path(DATA_FOLDER).mkdir(parents=True, exist_ok=True)
 
-    for tier in tiers:
+    for tier in settings.TIERS:
         matches_with_tier = api_tools.get_a_sample_of_matches(
-            tier=tier, number_of_matches=number_of_matches_by_tier
+            tier=tier, number_of_matches=settings.NUMBER_OF_MATCHES_BY_TIER
         )
         infos = api_tools.extract_infos_from_matches(
             matches_with_tier=matches_with_tier
