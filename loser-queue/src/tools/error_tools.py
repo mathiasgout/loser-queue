@@ -3,6 +3,7 @@ import time
 from sys import stdout
 from functools import wraps
 
+
 class CustomHttpError(Exception):
     def __init__(self, status_code) -> None:
         self.message = f"Status code = {status_code}"
