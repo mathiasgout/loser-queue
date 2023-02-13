@@ -8,8 +8,8 @@ Les données sont extraites puis stockées dans des fichiers `JSON`.
 Chaque fichier contient autant d'objet que de parties extraites. Chaque object est composé de `4 couples clef / valeur` :
 - `match_id` : l'ID de la partie extraite
 - `tier` : le tier de la partie (MASTER, DIAMAND, PLATINUM, ...)
-- `team_100` : une liste de 5 éléments contenant des informations sur les résultats des dernières parties de chaque joueur de l'équipe bleu
-- `team_200` : une liste de 5 éléments contenant des informations sur les résultats des dernières parties de chaque joueur de l'équipe rouge
+- `team_100` : une liste de 5 éléments contenant des informations sur les résultats des **20 dernières parties (max)** de chaque joueur de l'équipe bleu
+- `team_200` : une liste de 5 éléments contenant des informations sur les résultats des **20 dernières parties (max)** de chaque joueur de l'équipe rouge
 
 Un fichier `JSON` est crée par tier.
 
@@ -57,6 +57,6 @@ Un dossier `data/` va se créer et les fichiers `JSON` seront placés dans ce do
 Un dossier `loser-queue/data/` va se créer et les fichiers `JSON` seront placés dans ce dossier.
 
 ### Temps d'exécution
-Pour extraire les informations d'une seule partie, **plus de 200 requêtes HTTP** sont envoyés à l'API Riot.
+Pour extraire les informations d'une seule partie, **plus de 220 requêtes HTTP** sont envoyés à l'API Riot.
 
 Avec une clef API de développement classique limité à **100 requêtes HTTP toutes les 2 minutes**, il faut plus de **6 minutes** pour extraire les informations d'une partie.
