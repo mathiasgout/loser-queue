@@ -4,13 +4,12 @@ from sys import stdout
 from functools import wraps
 
 
-class CustomHttpError(Exception):
-    def __init__(self, status_code) -> None:
-        self.message = f"Status code = {status_code}"
-        super().__init__(self.message)
+class NotWaitableHttpError(Exception):
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
 
 
-class RateLimitError(Exception):
+class WaitableHttpError(Exception):
     def __init__(self, *args: object) -> None:
         super().__init__(*args)
 

@@ -1,5 +1,10 @@
 from src import logger
-from src.tools.error_tools import exception, retry, CustomHttpError, RateLimitError
+from src.tools.error_tools import (
+    exception,
+    retry,
+    NotWaitableHttpError,
+    WaitableHttpError,
+)
 
 import os
 import math
@@ -26,7 +31,7 @@ def get_api_key() -> str:
 
 
 @exception(logger)
-@retry(RateLimitError, tries=3000, delay=30, backoff=1, logger=logger)
+@retry(WaitableHttpError, tries=3000, delay=30, backoff=1, logger=logger)
 def get_summoner_from_summoner_name(summoner_name: str) -> dict:
     """Returns Summoner's dict from summoner's name
 
@@ -34,8 +39,8 @@ def get_summoner_from_summoner_name(summoner_name: str) -> dict:
         summoner_name (str): summoner's name
 
     Raises:
-        RateLimitError: HTTP 429
-        CustomHttpError: HTTP code >= 400
+        WaitableHttpError: HTTP code >= 429
+        NotWaitableHttpError: HTTP code >= 400 and HTTP code < 429
 
     Returns:
         dict: Summoner's infos in a dict
@@ -50,20 +55,20 @@ def get_summoner_from_summoner_name(summoner_name: str) -> dict:
         logger.info(f"Summoner with name: '{summoner_name}' extracted")
         return r_get.json()
 
-    if r_get.status_code == 429:
+    if r_get.status_code >= 429:
         logger.warning(
-            f"RateLimitError. Summoner with name: '{summoner_name}' can not be extracted"
+            f"WaitableHttpError ({r_get.status_code}). Summoner with name: '{summoner_name}' can not be extracted"
         )
-        raise RateLimitError
+        raise WaitableHttpError
 
     logger.warning(
-        f"Summoner with name: '{summoner_name}' can not be extracted, request status : {r_get.status_code}"
+        f"NotWaitableHttpError ({r_get.status_code}). Summoner with name: '{summoner_name}' can not be extracted."
     )
-    raise CustomHttpError(status_code=r_get.status_code)
+    raise NotWaitableHttpError
 
 
 @exception(logger)
-@retry(RateLimitError, tries=3000, delay=30, backoff=1, logger=logger)
+@retry(WaitableHttpError, tries=3000, delay=30, backoff=1, logger=logger)
 def get_active_entry_from_rank(page: int, tier: str, division: str) -> List[dict]:
     """Returns a list of active entries from a rank
 
@@ -73,8 +78,8 @@ def get_active_entry_from_rank(page: int, tier: str, division: str) -> List[dict
         division (str): the division (I, II, III, IV)
 
     Raises:
-        RateLimitError: HTTP 429
-        CustomHttpError: HTTP code >= 400
+        WaitableHttpError: HTTP code >= 429
+        NotWaitableHttpError: HTTP code >= 400 and HTTP code < 429
 
     Returns:
         List[dict]: a list of entries
@@ -94,20 +99,20 @@ def get_active_entry_from_rank(page: int, tier: str, division: str) -> List[dict
         )
         return entries
 
-    if r_get.status_code == 429:
+    if r_get.status_code >= 429:
         logger.warning(
-            f"RateLimitError. Entries of 'queue': '{queue}', 'tier': '{tier}', 'division': '{division}' can not be extracted"
+            f"WaitableHttpError ({r_get.status_code}). Entries of 'queue': '{queue}', 'tier': '{tier}', 'division': '{division}' can not be extracted"
         )
-        raise RateLimitError
+        raise WaitableHttpError
 
     logger.warning(
-        f"Entries of 'queue': '{queue}', 'tier': '{tier}', 'division': '{division}' can not be extracted, request status : {r_get.status_code}"
+        f"NotWaitableHttpError ({r_get.status_code}). Entries of 'queue': '{queue}', 'tier': '{tier}', 'division': '{division}' can not be extracted"
     )
-    raise CustomHttpError(status_code=r_get.status_code)
+    raise NotWaitableHttpError
 
 
 @exception(logger)
-@retry(RateLimitError, tries=3000, delay=30, backoff=1, logger=logger)
+@retry(WaitableHttpError, tries=3000, delay=30, backoff=1, logger=logger)
 def get_match_ids_from_summoner_puuid(
     summoner_puuid: str, limit: int = 20
 ) -> List[str]:
@@ -118,8 +123,8 @@ def get_match_ids_from_summoner_puuid(
         limit (int, optional): number of Match ID to extract. Defaults to 20.
 
     Raises:
-        RateLimitError: HTTP 429
-        CustomHttpError: HTTP code >= 400
+        WaitableHttpError: HTTP code >= 429
+        NotWaitableHttpError: HTTP code >= 400 and HTTP code < 429
 
     Returns:
         List[str]: a list of summoner's Match ID
@@ -142,20 +147,20 @@ def get_match_ids_from_summoner_puuid(
         )
         return match_ids
 
-    if r_get.status_code == 429:
+    if r_get.status_code >= 429:
         logger.warning(
-            f"RateLimitError. Match IDs of Summoner with puuid: {summoner_puuid} can not be extracted"
+            f"WaitableHttpError ({r_get.status_code}). Match IDs of Summoner with puuid: {summoner_puuid} can not be extracted"
         )
-        raise RateLimitError
+        raise WaitableHttpError
 
     logger.warning(
-        f"Match IDs of Summoner with puuid: {summoner_puuid} can not be extracted, request status : {r_get.status_code}"
+        f"NotWaitableHttpError ({r_get.status_code}). Match IDs of Summoner with puuid: {summoner_puuid} can not be extracted"
     )
-    raise CustomHttpError(status_code=r_get.status_code)
+    raise NotWaitableHttpError
 
 
 @exception(logger)
-@retry(RateLimitError, tries=3000, delay=30, backoff=1, logger=logger)
+@retry(WaitableHttpError, tries=3000, delay=30, backoff=1, logger=logger)
 def get_match_from_match_id(match_id: str) -> dict:
     """Returns the dict of a Match from a Match ID
 
@@ -163,8 +168,8 @@ def get_match_from_match_id(match_id: str) -> dict:
         match_id (str): Match ID
 
     Raises:
-        RateLimitError: HTTP 429
-        CustomHttpError: HTTP code >= 400
+        RateLimitError: HTTP code >= 429
+        NotWaitableHttpError: HTTP code >= 400 and HTTP code < 429
 
     Returns:
         dict: the dict of a Match
@@ -179,16 +184,16 @@ def get_match_from_match_id(match_id: str) -> dict:
         logger.info(f"Match with ID: {match_id} extracted")
         return r_get.json()
 
-    if r_get.status_code == 429:
+    if r_get.status_code >= 429:
         logger.warning(
-            f"RateLimitError. Match with ID: {match_id} can not be extracted"
+            f"WaitableHttpError ({r_get.status_code}). Match with ID: {match_id} can not be extracted"
         )
-        raise RateLimitError
+        raise WaitableHttpError
 
     logger.warning(
-        f"Match with ID: {match_id} can not be extracted, request status : {r_get.status_code}"
+        f"NotWaitableHttpError ({r_get.status_code}). Match with ID: {match_id} can not be extracted"
     )
-    raise CustomHttpError(status_code=r_get.status_code)
+    raise NotWaitableHttpError
 
 
 @exception(logger)
@@ -401,7 +406,7 @@ def get_last_matches_of_summoner_by_summoner_name(
     try:
         summoner = get_summoner_from_summoner_name(summoner_name=summoner_name)
         summoner_puuid = extract_puuid_from_summoner(summoner=summoner)
-    except CustomHttpError as e:
+    except NotWaitableHttpError as e:
         return []
 
     return get_last_matches_of_summoner_by_puuid(
