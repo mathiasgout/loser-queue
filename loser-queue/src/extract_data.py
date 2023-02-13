@@ -15,7 +15,6 @@ DATA_FOLDER = os.path.join(
 
 @exception(logger)
 def create_json_file():
-
     settings = config.get_settings()
 
     for tier in settings.TIERS:
