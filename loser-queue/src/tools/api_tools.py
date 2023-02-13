@@ -468,7 +468,6 @@ def get_a_sample_of_matches(
         match_id = extract_match_id_from_match(match_with_tier["match"])
         if match_id not in match_ids:
             matches_with_tier_unique.append(match_with_tier)
-        else:
             match_ids.append(match_id)
 
     logger.info(
