@@ -5,7 +5,7 @@ Ce projet permet d'extraire des données via l'API Riot pour essayer de prouver 
 ## Modèle des données extraites
 Les données sont extraites puis stockées dans des fichiers `JSON`.
 
-Chaque fichier contient autant d'objet que de parties extraites. Chaque object est composé de `4 couples clef / valeur` :
+Chaque fichier contient autant d'objets que de parties extraites. Chaque objet est composé de **4 couples clef / valeur** :
 - `match_id` : l'ID de la partie extraite
 - `tier` : le tier de la partie (MASTER, DIAMAND, PLATINUM, ...)
 - `team_100` : une liste de 5 éléments contenant des informations sur les résultats des **20 dernières parties (max)** de chaque joueur de l'équipe bleu
