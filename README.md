@@ -59,4 +59,4 @@ Un dossier `loser-queue/data/` va se créer et les fichiers `JSON` seront placé
 ### Temps d'exécution
 Pour extraire les informations d'une seule partie, **plus de 220 requêtes HTTP** sont envoyés à l'API Riot.
 
-Avec une clef API de développement classique limité à **100 requêtes HTTP toutes les 2 minutes**, il faut plus de **6 minutes** pour extraire les informations d'une partie.
+Avec une clef API de développement classique limité à **100 requêtes HTTP toutes les 2 minutes**, il faut plus de **6 minutes** pour extraire les informations d'une partie, ce qui veut dire qu'on peut extraire les informations de **maximum 240 par jours**.
