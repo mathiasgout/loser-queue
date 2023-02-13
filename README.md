@@ -55,3 +55,8 @@ Un dossier `data/` va se créer et les fichiers `JSON` seront placés dans ce do
     pipenv run python main.py
     ````
 Un dossier `loser-queue/data/` va se créer et les fichiers `JSON` seront placés dans ce dossier.
+
+### Temps d'exécution
+Pour extraire les informations d'une seule partie, **plus de 200 requêtes HTTP** sont envoyés à l'API Riot.
+
+Avec une clef API de développement classique limité à **100 requêtes HTTP toutes les 2 minutes**, il faut plus de **6 minutes** pour extraire les informations d'une partie.
