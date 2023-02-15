@@ -2,8 +2,13 @@
 
 Ce projet permet d'extraire des données via l'API Riot pour essayer de prouver (ou non) que la loser queue existe.
 
+Vous pouvez retrouver les fichiers qui contiennent les données que j'ai précédemment extraites dans le dossier `data/`.
+
 ## Modèle des données extraites
-Les données sont extraites puis stockées dans des fichiers `JSON`.
+Les données sont extraites puis stockées dans des fichiers `JSON`. Le nom du fichier est formatté de la façon suivante :
+````
+data_<TIER>_<NOMBRE DE PARTIE>_<TIMESTAMP DE FIN D'EXTRACTION>.json
+````
 
 Chaque fichier contient autant d'objets que de parties extraites. Chaque objet est composé de **4 couples clef / valeur** :
 - `match_id` : l'ID de la partie extraite
