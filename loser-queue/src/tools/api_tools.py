@@ -7,7 +7,7 @@ from src.tools.error_tools import (
 )
 
 import os
-import math
+import random
 from typing import List, Dict, Union
 
 import dotenv
@@ -307,45 +307,34 @@ def get_summoner_names_from_tier(tier: str, number: int) -> List[str]:
     Returns:
         List[str]: list of summoner names
     """
-    number_by_division = math.ceil(number / 4)
-
     divisions = ["I", "II", "III", "IV"]
+    entries = []
     summoner_names = []
     if tier in ["CHALLENGER", "GRANDMASTER", "MASTER"]:
-        page = 1
-        while len(summoner_names) < number:
-            entries = get_active_entry_from_rank(page=page, tier=tier, division="I")
+        for i in range(1, 50):
+            entries_packaged = get_active_entry_from_rank(page=i, tier=tier, division="I")
 
-            # If no more entries
-            if not entries:
-                return summoner_names
-
-            for entry in entries:
-                if len(summoner_names) >= number:
-                    break
-                summoner_names.append(extract_summoner_name_from_entry(entry=entry))
-            page += 1
+            if entries_packaged:
+                entries.extend(entries_packaged)
+            else:
+                break
     else:
         for division in divisions:
-            summoner_names_division = []
-            page = 1
-            while len(summoner_names_division) < number_by_division:
-                entries = get_active_entry_from_rank(
-                    page=page, tier=tier, division=division
-                )
+            for i in range(1, 50):
+                entries_packaged = get_active_entry_from_rank(page=i, tier=tier, division=division)
 
-                # If no more entries
-                if not entries:
-                    return summoner_names
+                if entries_packaged:
+                    entries.extend(entries_packaged)
+                else:
+                    break
 
-                for entry in entries:
-                    if len(summoner_names_division) >= number_by_division:
-                        break
-                    summoner_names_division.append(
-                        extract_summoner_name_from_entry(entry=entry)
-                    )
-                page += 1
-            summoner_names.extend(summoner_names_division)
+    # Random sample of entries
+    entries_selected = random.sample(entries, k=min(number, len(entries)))
+    
+    # Extract summoners names
+    for entry in entries_selected:
+        summoner_names.append(extract_summoner_name_from_entry(entry=entry))
+
     return summoner_names
 
 
