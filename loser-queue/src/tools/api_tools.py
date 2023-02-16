@@ -59,12 +59,12 @@ def get_summoner_from_summoner_name(summoner_name: str) -> dict:
         logger.warning(
             f"WaitableHttpError ({r_get.status_code}). Summoner with name: '{summoner_name}' can not be extracted"
         )
-        raise WaitableHttpError
+        raise WaitableHttpError(f"HTTP {r_get.status_code}")
 
     logger.warning(
         f"NotWaitableHttpError ({r_get.status_code}). Summoner with name: '{summoner_name}' can not be extracted."
     )
-    raise NotWaitableHttpError
+    raise NotWaitableHttpError(f"HTTP {r_get.status_code}")
 
 
 @exception(logger)
@@ -103,12 +103,12 @@ def get_active_entry_from_rank(page: int, tier: str, division: str) -> List[dict
         logger.warning(
             f"WaitableHttpError ({r_get.status_code}). Entries of 'queue': '{queue}', 'tier': '{tier}', 'division': '{division}' can not be extracted"
         )
-        raise WaitableHttpError
+        raise WaitableHttpError(f"HTTP {r_get.status_code}")
 
     logger.warning(
         f"NotWaitableHttpError ({r_get.status_code}). Entries of 'queue': '{queue}', 'tier': '{tier}', 'division': '{division}' can not be extracted"
     )
-    raise NotWaitableHttpError
+    raise NotWaitableHttpError(f"HTTP {r_get.status_code}")
 
 
 @exception(logger)
@@ -151,12 +151,12 @@ def get_match_ids_from_summoner_puuid(
         logger.warning(
             f"WaitableHttpError ({r_get.status_code}). Match IDs of Summoner with puuid: {summoner_puuid} can not be extracted"
         )
-        raise WaitableHttpError
+        raise WaitableHttpError(f"HTTP {r_get.status_code}")
 
     logger.warning(
         f"NotWaitableHttpError ({r_get.status_code}). Match IDs of Summoner with puuid: {summoner_puuid} can not be extracted"
     )
-    raise NotWaitableHttpError
+    raise NotWaitableHttpError(f"HTTP {r_get.status_code}")
 
 
 @exception(logger)
@@ -188,12 +188,12 @@ def get_match_from_match_id(match_id: str) -> dict:
         logger.warning(
             f"WaitableHttpError ({r_get.status_code}). Match with ID: {match_id} can not be extracted"
         )
-        raise WaitableHttpError
+        raise WaitableHttpError(f"HTTP {r_get.status_code}")
 
     logger.warning(
         f"NotWaitableHttpError ({r_get.status_code}). Match with ID: {match_id} can not be extracted"
     )
-    raise NotWaitableHttpError
+    raise NotWaitableHttpError(f"HTTP {r_get.status_code}")
 
 
 @exception(logger)
@@ -418,12 +418,25 @@ def get_matches_of_a_tier(tier: str, number_of_matches: int) -> List[Dict[str, d
     """
     summoner_names = get_summoner_names_from_tier(tier=tier, number=number_of_matches)
 
+    # If len(summoner_names) < number_of_matches, extract more than 1 game by summoner
     matches = []
-    for summoner_name in summoner_names:
-        match = get_last_matches_of_summoner_by_summoner_name(
-            summoner_name=summoner_name, number_of_matches=1
-        )
-        matches.extend(match)
+    size_summoner_names = len(summoner_names) 
+    if size_summoner_names < number_of_matches:
+        remainder = number_of_matches % size_summoner_names
+        floor = number_of_matches // size_summoner_names
+        for i in range(remainder):
+            matches_packaged = get_last_matches_of_summoner_by_summoner_name(summoner_name=summoner_names[i], number_of_matches=floor+1)
+            matches.extend(matches_packaged)
+        for i in range(remainder, size_summoner_names):
+            match = get_last_matches_of_summoner_by_summoner_name(summoner_name=summoner_names[i], number_of_matches=1)
+            matches.extend(match)
+
+    else:
+        for summoner_name in summoner_names:
+            match = get_last_matches_of_summoner_by_summoner_name(
+                summoner_name=summoner_name, number_of_matches=1
+            )
+            matches.extend(match)
 
     matches_with_tier = []
     for match in matches:
