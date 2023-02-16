@@ -542,10 +542,12 @@ def extract_infos_from_matches(matches_with_tier: List[dict]) -> List[dict]:
     Returns:
         List[dict]: list of informations from the matches
     """
+
+    number_of_matches_with_tier = len(matches_with_tier)
     infos_from_matches = []
-    for match_with_tier in matches_with_tier:
+    for i, match_with_tier in enumerate(matches_with_tier):
         infos_from_matches.append(
             extract_infos_from_match(match_with_tier=match_with_tier)
         )
-
+        logger.info(f"Batch progression : {i+1}/{number_of_matches_with_tier} ({(i+1)/number_of_matches_with_tier:.0%})")
     return infos_from_matches
