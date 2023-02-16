@@ -315,7 +315,7 @@ def get_summoner_names_from_tier(tier: str, number: int) -> List[str]:
     entries = []
     summoner_names = []
     if tier in ["CHALLENGER", "GRANDMASTER", "MASTER"]:
-        for i in range(1, 50):
+        for i in range(1, 100):
             entries_packaged = get_active_entry_from_rank(page=i, tier=tier, division="I")
 
             if entries_packaged:
@@ -324,7 +324,7 @@ def get_summoner_names_from_tier(tier: str, number: int) -> List[str]:
                 break
     else:
         for division in divisions:
-            for i in range(1, 50):
+            for i in range(1, 100):
                 entries_packaged = get_active_entry_from_rank(page=i, tier=tier, division=division)
 
                 if entries_packaged:
