@@ -31,7 +31,9 @@ def get_api_key() -> str:
 
 
 @exception(logger)
-@retry(requests.exceptions.ConnectionError, tries=9000, delay=10, backoff=1, logger=logger)
+@retry(
+    requests.exceptions.ConnectionError, tries=9000, delay=10, backoff=1, logger=logger
+)
 @retry(WaitableHttpError, tries=3000, delay=30, backoff=1, logger=logger)
 def get_summoner_from_summoner_name(summoner_name: str) -> dict:
     """Returns Summoner's dict from summoner's name
@@ -69,7 +71,9 @@ def get_summoner_from_summoner_name(summoner_name: str) -> dict:
 
 
 @exception(logger)
-@retry(requests.exceptions.ConnectionError, tries=9000, delay=10, backoff=1, logger=logger)
+@retry(
+    requests.exceptions.ConnectionError, tries=9000, delay=10, backoff=1, logger=logger
+)
 @retry(WaitableHttpError, tries=3000, delay=30, backoff=1, logger=logger)
 def get_active_entry_from_rank(page: int, tier: str, division: str) -> List[dict]:
     """Returns a list of active entries from a rank
@@ -114,7 +118,9 @@ def get_active_entry_from_rank(page: int, tier: str, division: str) -> List[dict
 
 
 @exception(logger)
-@retry(requests.exceptions.ConnectionError, tries=9000, delay=10, backoff=1, logger=logger)
+@retry(
+    requests.exceptions.ConnectionError, tries=9000, delay=10, backoff=1, logger=logger
+)
 @retry(WaitableHttpError, tries=3000, delay=30, backoff=1, logger=logger)
 def get_match_ids_from_summoner_puuid(
     summoner_puuid: str, limit: int = 20
@@ -163,7 +169,9 @@ def get_match_ids_from_summoner_puuid(
 
 
 @exception(logger)
-@retry(requests.exceptions.ConnectionError, tries=9000, delay=10, backoff=1, logger=logger)
+@retry(
+    requests.exceptions.ConnectionError, tries=9000, delay=10, backoff=1, logger=logger
+)
 @retry(WaitableHttpError, tries=3000, delay=30, backoff=1, logger=logger)
 def get_match_from_match_id(match_id: str) -> dict:
     """Returns the dict of a Match from a Match ID
@@ -316,7 +324,9 @@ def get_summoner_names_from_tier(tier: str, number: int) -> List[str]:
     summoner_names = []
     if tier in ["CHALLENGER", "GRANDMASTER", "MASTER"]:
         for i in range(1, 100):
-            entries_packaged = get_active_entry_from_rank(page=i, tier=tier, division="I")
+            entries_packaged = get_active_entry_from_rank(
+                page=i, tier=tier, division="I"
+            )
 
             if entries_packaged:
                 entries.extend(entries_packaged)
@@ -325,7 +335,9 @@ def get_summoner_names_from_tier(tier: str, number: int) -> List[str]:
     else:
         for division in divisions:
             for i in range(1, 100):
-                entries_packaged = get_active_entry_from_rank(page=i, tier=tier, division=division)
+                entries_packaged = get_active_entry_from_rank(
+                    page=i, tier=tier, division=division
+                )
 
                 if entries_packaged:
                     entries.extend(entries_packaged)
@@ -334,7 +346,7 @@ def get_summoner_names_from_tier(tier: str, number: int) -> List[str]:
 
     # Random sample of entries
     entries_selected = random.sample(entries, k=min(number, len(entries)))
-    
+
     # Extract summoners names
     for entry in entries_selected:
         summoner_names.append(extract_summoner_name_from_entry(entry=entry))
@@ -424,15 +436,19 @@ def get_matches_of_a_tier(tier: str, number_of_matches: int) -> List[Dict[str, d
 
     # If len(summoner_names) < number_of_matches, extract more than 1 game by summoner
     matches = []
-    size_summoner_names = len(summoner_names) 
+    size_summoner_names = len(summoner_names)
     if size_summoner_names < number_of_matches:
         remainder = number_of_matches % size_summoner_names
         floor = number_of_matches // size_summoner_names
         for i in range(remainder):
-            matches_packaged = get_last_matches_of_summoner_by_summoner_name(summoner_name=summoner_names[i], number_of_matches=floor+1)
+            matches_packaged = get_last_matches_of_summoner_by_summoner_name(
+                summoner_name=summoner_names[i], number_of_matches=floor + 1
+            )
             matches.extend(matches_packaged)
         for i in range(remainder, size_summoner_names):
-            match = get_last_matches_of_summoner_by_summoner_name(summoner_name=summoner_names[i], number_of_matches=1)
+            match = get_last_matches_of_summoner_by_summoner_name(
+                summoner_name=summoner_names[i], number_of_matches=1
+            )
             matches.extend(match)
 
     else:
@@ -549,5 +565,7 @@ def extract_infos_from_matches(matches_with_tier: List[dict]) -> List[dict]:
         infos_from_matches.append(
             extract_infos_from_match(match_with_tier=match_with_tier)
         )
-        logger.info(f"Batch progression : {i+1}/{number_of_matches_with_tier} ({(i+1)/number_of_matches_with_tier:.0%})")
+        logger.info(
+            f"Batch progression : {i+1}/{number_of_matches_with_tier} ({(i+1)/number_of_matches_with_tier:.0%})"
+        )
     return infos_from_matches
