@@ -22,18 +22,18 @@ Un fichier `JSON` est crée par tier.
 
 - `loser-queue/.env`:
     - `API_KEY=<CLEF API>` (avec `<CLEF API>` une clef API Riot générable via [cette page](https://developer.riotgames.com/))
+- `loser-queue/config.ini`:
+    - Fichier `.ini` avec une section nommée `[default]`
+    - La section `[default]` a comme paramètres:
+        - `TIERS: ["<LISTE>", "<DE>", "<TIERS>"]` (valeurs possible d'un tiers : *"CHALLENGER"*, *"GRANDMASTER"*, *"MASTER"*, *"DIAMOND"*, *"PLATINUM"*, *"GOLD"*, *"SILVER"*, *"BRONZE"*, *"IRON"*)
+        - `NUMBER_OF_MATCHES_BY_TIER: <NOMBRE DE PARTIE EXTRAITES PAR TIER>`
 
-### Modification de la configuration
-
-- `loser-queue/src/config.py`:
-    ````python
-    class Settings:
-        """Base config"""
-
-        # Possible values for "tiers" to add in the list : "DIAMOND", "PLATINUM", "GOLD", "SILVER", "BRONZE", "IRON"
-        TIERS: list = ["CHALLENGER", "GRANDMASTER", "MASTER"] <-- Liste des tiers dont les parties vont extraites
-        NUMBER_OF_MATCHES_BY_TIER: int = 300 <-- Nombre de partie par tier extraites
-    ````
+*Exemple de fichier `loser-queue/config.ini`*:
+````
+[default]
+TIERS: ["CHALLENGER", "GRANDMASTER", "MASTER"]
+NUMBER_OF_MATCHES_BY_TIER: 300
+````
 
 ### Utilisation via `Docker`
 - Installer [`Docker`](https://docs.docker.com/engine/install/)
