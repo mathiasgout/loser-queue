@@ -1,6 +1,6 @@
-# Loser Queue ?
+# League Of Legends : Loser Queue ?
 
-Ce projet permet d'extraire des données via l'API Riot pour essayer de prouver (ou non) que la loser queue existe.
+Ce projet permet d'extraire des données via l'API Riot pour essayer de prouver (ou non) que la loser queue existe sur *League Of Legends*.
 
 ## Modèle des données extraites
 Les données sont extraites puis stockées dans des fichiers `JSON`. Le nom du fichier est formatté de la façon suivante :
@@ -10,7 +10,7 @@ data_<TIER>_<NOMBRE DE PARTIE>_<TIMESTAMP DE FIN D'EXTRACTION>.json
 
 Chaque fichier contient autant d'objets que de parties extraites. Chaque objet est composé de **4 couples clef / valeur** :
 - `match_id` : l'ID de la partie extraite
-- `tier` : le tier de la partie (MASTER, DIAMAND, PLATINUM, ...)
+- `tier` : le tier de la partie (*MASTER*, *DIAMAND*, *PLATINUM*, ...)
 - `team_100` : une liste de 5 éléments contenant des informations sur les résultats des **20 dernières parties (max)** de chaque joueur de l'équipe bleu
 - `team_200` : une liste de 5 éléments contenant des informations sur les résultats des **20 dernières parties (max)** de chaque joueur de l'équipe rouge
 
@@ -18,7 +18,7 @@ Un fichier `JSON` est crée par tier.
 
 ## Utilisation du projet
 
-### Fichier à ajouter pour rendre le projet fonctionnel
+### Fichiers à ajouter pour rendre le projet fonctionnel
 
 - `loser-queue/.env`:
     - `API_KEY=<CLEF API>` (avec `<CLEF API>` une clef API Riot générable via [cette page](https://developer.riotgames.com/))
