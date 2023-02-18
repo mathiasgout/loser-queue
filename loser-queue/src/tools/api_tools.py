@@ -34,7 +34,7 @@ def get_api_key() -> str:
 @retry(
     requests.exceptions.ConnectionError, tries=9000, delay=10, backoff=1, logger=logger
 )
-@retry(WaitableHttpError, tries=3000, delay=30, backoff=1, logger=logger)
+@retry(WaitableHttpError, tries=3000, delay=20, backoff=1, logger=logger)
 def get_summoner_from_summoner_name(summoner_name: str) -> dict:
     """Returns Summoner's dict from summoner's name
 
@@ -74,7 +74,7 @@ def get_summoner_from_summoner_name(summoner_name: str) -> dict:
 @retry(
     requests.exceptions.ConnectionError, tries=9000, delay=10, backoff=1, logger=logger
 )
-@retry(WaitableHttpError, tries=3000, delay=30, backoff=1, logger=logger)
+@retry(WaitableHttpError, tries=3000, delay=20, backoff=1, logger=logger)
 def get_active_entry_from_rank(page: int, tier: str, division: str) -> List[dict]:
     """Returns a list of active entries from a rank
 
@@ -121,7 +121,7 @@ def get_active_entry_from_rank(page: int, tier: str, division: str) -> List[dict
 @retry(
     requests.exceptions.ConnectionError, tries=9000, delay=10, backoff=1, logger=logger
 )
-@retry(WaitableHttpError, tries=3000, delay=30, backoff=1, logger=logger)
+@retry(WaitableHttpError, tries=3000, delay=20, backoff=1, logger=logger)
 def get_match_ids_from_summoner_puuid(
     summoner_puuid: str, limit: int = 20
 ) -> List[str]:
@@ -172,7 +172,7 @@ def get_match_ids_from_summoner_puuid(
 @retry(
     requests.exceptions.ConnectionError, tries=9000, delay=10, backoff=1, logger=logger
 )
-@retry(WaitableHttpError, tries=3000, delay=30, backoff=1, logger=logger)
+@retry(WaitableHttpError, tries=3000, delay=20, backoff=1, logger=logger)
 def get_match_from_match_id(match_id: str) -> dict:
     """Returns the dict of a Match from a Match ID
 
