@@ -22,7 +22,7 @@ dotenv.load_dotenv(os.path.join(ENV_FILE_FOLDER, ".env"))
 
 @exception(logger)
 def get_api_key() -> str:
-    """Returns the Riot API Key that is stored in the 'loser-queue/src/.env' file
+    """Returns the Riot API Key that is stored in the 'loser-queue/.env' file
 
     Returns:
         str: Riot API Key
@@ -566,6 +566,6 @@ def extract_infos_from_matches(matches_with_tier: List[dict]) -> List[dict]:
             extract_infos_from_match(match_with_tier=match_with_tier)
         )
         logger.info(
-            f"Batch progression : {i+1}/{number_of_matches_with_tier} ({(i+1)/number_of_matches_with_tier:.0%})"
+            f"Batch progression : {i+1}/{number_of_matches_with_tier} ({(i+1)/number_of_matches_with_tier:.2%})"
         )
     return infos_from_matches
