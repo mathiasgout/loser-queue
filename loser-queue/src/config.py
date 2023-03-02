@@ -3,7 +3,10 @@ import ast
 from configparser import ConfigParser
 
 
-CONFIG_FILE_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), "config.ini")
+CONFIG_FILE_PATH = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.realpath(__file__))), "config.ini"
+)
+
 
 def get_config(filename="config.ini", section="default"):
     # create a parser
@@ -19,6 +22,7 @@ def get_config(filename="config.ini", section="default"):
 
 
 config = get_config(filename=CONFIG_FILE_PATH)
+
 
 class Settings:
     """Base config"""

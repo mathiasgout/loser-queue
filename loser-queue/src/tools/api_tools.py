@@ -34,7 +34,7 @@ def get_api_key() -> str:
 @retry(
     requests.exceptions.ConnectionError, tries=9000, delay=10, backoff=1, logger=logger
 )
-@retry(WaitableHttpError, tries=3000, delay=20, backoff=1, logger=logger)
+@retry(WaitableHttpError, tries=9000, delay=10, backoff=1, logger=logger)
 def get_summoner_from_summoner_name(summoner_name: str) -> dict:
     """Returns Summoner's dict from summoner's name
 
@@ -55,17 +55,17 @@ def get_summoner_from_summoner_name(summoner_name: str) -> dict:
         params=params,
     )
     if r_get.ok:
-        logger.info(f"Summoner with name: '{summoner_name}' extracted")
+        logger.info(f"[HTTP GET Riot] Summoner with name: '{summoner_name}' extracted")
         return r_get.json()
 
     if r_get.status_code >= 429:
         logger.warning(
-            f"WaitableHttpError ({r_get.status_code}). Summoner with name: '{summoner_name}' can not be extracted"
+            f"[HTTP GET Riot] WaitableHttpError ({r_get.status_code}). Summoner with name: '{summoner_name}' can not be extracted"
         )
         raise WaitableHttpError(f"HTTP {r_get.status_code}")
 
     logger.warning(
-        f"NotWaitableHttpError ({r_get.status_code}). Summoner with name: '{summoner_name}' can not be extracted."
+        f"[HTTP GET Riot] NotWaitableHttpError ({r_get.status_code}). Summoner with name: '{summoner_name}' can not be extracted."
     )
     raise NotWaitableHttpError(f"HTTP {r_get.status_code}")
 
@@ -74,7 +74,7 @@ def get_summoner_from_summoner_name(summoner_name: str) -> dict:
 @retry(
     requests.exceptions.ConnectionError, tries=9000, delay=10, backoff=1, logger=logger
 )
-@retry(WaitableHttpError, tries=3000, delay=20, backoff=1, logger=logger)
+@retry(WaitableHttpError, tries=9000, delay=10, backoff=1, logger=logger)
 def get_active_entry_from_rank(page: int, tier: str, division: str) -> List[dict]:
     """Returns a list of active entries from a rank
 
@@ -101,18 +101,18 @@ def get_active_entry_from_rank(page: int, tier: str, division: str) -> List[dict
     if r_get.ok:
         entries = [entry for entry in r_get.json() if entry["inactive"] is False]
         logger.info(
-            f"Entries ({len(entries)}) of 'queue': '{queue}', 'tier': '{tier}', 'division': '{division}' extracted"
+            f"[HTTP GET Riot] Entries ({len(entries)}) of 'queue': '{queue}', 'tier': '{tier}', 'division': '{division}' extracted"
         )
         return entries
 
     if r_get.status_code >= 429:
         logger.warning(
-            f"WaitableHttpError ({r_get.status_code}). Entries of 'queue': '{queue}', 'tier': '{tier}', 'division': '{division}' can not be extracted"
+            f"[HTTP GET Riot] WaitableHttpError ({r_get.status_code}). Entries of 'queue': '{queue}', 'tier': '{tier}', 'division': '{division}' can not be extracted"
         )
         raise WaitableHttpError(f"HTTP {r_get.status_code}")
 
     logger.warning(
-        f"NotWaitableHttpError ({r_get.status_code}). Entries of 'queue': '{queue}', 'tier': '{tier}', 'division': '{division}' can not be extracted"
+        f"[HTTP GET Riot] NotWaitableHttpError ({r_get.status_code}). Entries of 'queue': '{queue}', 'tier': '{tier}', 'division': '{division}' can not be extracted"
     )
     raise NotWaitableHttpError(f"HTTP {r_get.status_code}")
 
@@ -121,7 +121,7 @@ def get_active_entry_from_rank(page: int, tier: str, division: str) -> List[dict
 @retry(
     requests.exceptions.ConnectionError, tries=9000, delay=10, backoff=1, logger=logger
 )
-@retry(WaitableHttpError, tries=3000, delay=20, backoff=1, logger=logger)
+@retry(WaitableHttpError, tries=9000, delay=10, backoff=1, logger=logger)
 def get_match_ids_from_summoner_puuid(
     summoner_puuid: str, limit: int = 20
 ) -> List[str]:
@@ -152,18 +152,18 @@ def get_match_ids_from_summoner_puuid(
     if r_get.ok:
         match_ids = r_get.json()
         logger.info(
-            f"Match IDs ({len(match_ids)}) of Summoner with puuid: {summoner_puuid} extracted"
+            f"[HTTP GET Riot] Match IDs ({len(match_ids)}) of Summoner with puuid: {summoner_puuid} extracted"
         )
         return match_ids
 
     if r_get.status_code >= 429:
         logger.warning(
-            f"WaitableHttpError ({r_get.status_code}). Match IDs of Summoner with puuid: {summoner_puuid} can not be extracted"
+            f"[HTTP GET Riot] WaitableHttpError ({r_get.status_code}). Match IDs of Summoner with puuid: {summoner_puuid} can not be extracted"
         )
         raise WaitableHttpError(f"HTTP {r_get.status_code}")
 
     logger.warning(
-        f"NotWaitableHttpError ({r_get.status_code}). Match IDs of Summoner with puuid: {summoner_puuid} can not be extracted"
+        f"[HTTP GET Riot] NotWaitableHttpError ({r_get.status_code}). Match IDs of Summoner with puuid: {summoner_puuid} can not be extracted"
     )
     raise NotWaitableHttpError(f"HTTP {r_get.status_code}")
 
@@ -172,7 +172,7 @@ def get_match_ids_from_summoner_puuid(
 @retry(
     requests.exceptions.ConnectionError, tries=9000, delay=10, backoff=1, logger=logger
 )
-@retry(WaitableHttpError, tries=3000, delay=20, backoff=1, logger=logger)
+@retry(WaitableHttpError, tries=9000, delay=10, backoff=1, logger=logger)
 def get_match_from_match_id(match_id: str) -> dict:
     """Returns the dict of a Match from a Match ID
 
@@ -193,17 +193,17 @@ def get_match_from_match_id(match_id: str) -> dict:
         params=params,
     )
     if r_get.ok:
-        logger.info(f"Match with ID: {match_id} extracted")
+        logger.info(f"[HTTP GET Riot] Match with ID: {match_id} extracted")
         return r_get.json()
 
     if r_get.status_code >= 429:
         logger.warning(
-            f"WaitableHttpError ({r_get.status_code}). Match with ID: {match_id} can not be extracted"
+            f"[HTTP GET Riot] WaitableHttpError ({r_get.status_code}). Match with ID: {match_id} can not be extracted"
         )
         raise WaitableHttpError(f"HTTP {r_get.status_code}")
 
     logger.warning(
-        f"NotWaitableHttpError ({r_get.status_code}). Match with ID: {match_id} can not be extracted"
+        f"[HTTP GET Riot] NotWaitableHttpError ({r_get.status_code}). Match with ID: {match_id} can not be extracted"
     )
     raise NotWaitableHttpError(f"HTTP {r_get.status_code}")
 
@@ -388,9 +388,12 @@ def get_last_matches_of_summoner_by_puuid(
         )
 
     matches = []
-    for match_id in match_ids:
-        match = get_match_from_match_id(match_id=match_id)
-        matches.append(match)
+    try:
+        for match_id in match_ids:
+            match = get_match_from_match_id(match_id=match_id)
+            matches.append(match)
+    except NotWaitableHttpError as e:
+        return []
     return matches
 
 
